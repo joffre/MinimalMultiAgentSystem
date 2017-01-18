@@ -11,11 +11,13 @@ import core.Environment;
 import core.Position;
 import core.PropertiesReader;
 import core.SMA;
+import output.Log;
 import particules.MMASWindow;
 
 public class Main {
 
 	public static void main(String[] args) {
+
 		Environment env = new Environment();
 		
 		List<Agent> agents = new ArrayList<Agent>();

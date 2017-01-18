@@ -9,9 +9,12 @@ import core.Agent;
 import core.Environment;
 import core.Position;
 import core.PropertiesReader;
+import output.Log;
 
 public class Shark extends MarineAnimal{
 	int currentStarveTime;
+	public static final int SHARK_STARVE_TIME = PropertiesReader.getInstance().getSharkStarveTime();
+	public static final int SHARK_BREED_TIME = PropertiesReader.getInstance().getSharkBreedTime();
 	
 	public Shark(Environment environment, int posX, int posY) {
 		this(environment, posX, posY, false);
@@ -19,7 +22,7 @@ public class Shark extends MarineAnimal{
 	
 	public Shark(Environment environment,int posX, int posY, boolean baby) {
 		super(environment, posX, posY, baby);
-		this.currentStarveTime = PropertiesReader.getInstance().getSharkStarveTime();
+		this.currentStarveTime = SHARK_STARVE_TIME;
 		color = (baby)?Color.PINK:Color.RED;
 	}
 	
@@ -41,8 +44,8 @@ public class Shark extends MarineAnimal{
 					fish.kill();
 					env.getAgentsToRemove().add(fish);
 					env.getAgentGrid()[newPosition.getPosX()][newPosition.getPosY()] = null;
-					currentStarveTime = PropertiesReader.getInstance().getSharkStarveTime();
-					System.out.println("Fish DEAD["+fish.posX+","+fish.posY+"] by Shark["+this.posX+","+this.posY+"]");
+					currentStarveTime = SHARK_STARVE_TIME;
+					Log.info("Agent;"+"Fish;"+"DEAD;"+fish.posX+";"+fish.posY+";");
 				} else {
 					List<Position> positions = findFreePositions();
 					if(!positions.isEmpty()){
@@ -51,12 +54,12 @@ public class Shark extends MarineAnimal{
 				}
 				if(newPosition != null){
 					env.getAgentGrid()[posX][posY] = null;
-					if(currentBreedTime >= PropertiesReader.getInstance().getSharkBreedTime()){
+					if(currentBreedTime >= SHARK_BREED_TIME){
 						Shark babyShark = new Shark(env, posX, posY, true);
 						env.getAgentGrid()[posX][posY] = babyShark;
 						env.getAgentsToAdd().add(babyShark);
 						currentBreedTime = -1;
-						System.out.println("New SHARK is born");
+						Log.info("Agent;"+"Shark;"+"BORN;"+posX+";"+posY+";");
 					}
 					posX = newPosition.getPosX();
 					posY = newPosition.getPosY();
@@ -68,14 +71,14 @@ public class Shark extends MarineAnimal{
 				env.getAgentGrid()[posX][posY] = null;
 				kill();
 				env.getAgentsToRemove().add(this);
-				System.out.println("Shark DEAD");
+				Log.info("Agent;"+"Shark;"+"DEAD;"+posX+";"+posY+";");
 			}
 		}
 	}
 	
 	private List<Fish> findFishesToEat(){
-		int gridSizeX = PropertiesReader.getInstance().getGridSizeX();
-		int gridSizeY = PropertiesReader.getInstance().getGridSizeY();
+		int gridSizeX = env.getGridSizeX();
+		int gridSizeY = env.getGridSizeY();
 		
 		List<Fish> fishes = new ArrayList<Fish>();
 		for(int x = -1; x <= 1; x++){
@@ -83,7 +86,7 @@ public class Shark extends MarineAnimal{
 				if(!(x == 0 && y == 0)){
 					int newPositionX = posX+x;
 					int newPositionY = posY+y;
-					if(PropertiesReader.getInstance().isToric()){
+					if(env.isToric()){
 						if(newPositionX < 0){
 							newPositionX = gridSizeX -1;
 						} else if(newPositionX >= gridSizeX){

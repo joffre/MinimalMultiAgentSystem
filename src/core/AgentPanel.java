@@ -14,7 +14,9 @@ public class AgentPanel extends JPanel implements Observer{
 	 * 
 	 */
 	private static final long serialVersionUID = 1883316852901580151L;
-	
+	public static final boolean GRID_IS_VISIBLE = PropertiesReader.getInstance().gridIsVisible();
+	public static final int BOX_SIZE = PropertiesReader.getInstance().getBoxSize();
+
 	private SMA sma = null;
 	
 	public AgentPanel(Color backgroundColor) {
@@ -25,39 +27,28 @@ public class AgentPanel extends JPanel implements Observer{
 
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.setColor(Color.BLACK);
-		int gridSizeX = PropertiesReader.getInstance().getGridSizeX();
-		int gridSizeY = PropertiesReader.getInstance().getGridSizeY();
-		int boxSize = PropertiesReader.getInstance().getBoxSize();
-		if(sma != null)
-		for(int a = 0; a < sma.getAgentList().size(); a++){
-			Agent agent = sma.getAgentList().get(a);
-			
-			int x = agent.getPosition().getPosX();
-			int y = agent.getPosition().getPosY();
-			
-			g.setColor(agent.getColor());	
-			g.fillOval(x*boxSize,y*boxSize,boxSize,boxSize);
-		}
-		
-		/*
-		
-		for(int l = 0; l < gridSizeX; l++){
-			for(int c = 0; c < gridSizeY; c++){
-				Agent agent = env.getAgentGrid()[l][c];
+
+		if(sma != null) {
+			int gridSizeX = sma.getEnv().getGridSizeX();
+			int gridSizeY = sma.getEnv().getGridSizeY();
+			for (int a = 0; a < sma.getAgentList().size(); a++) {
+				Agent agent = sma.getAgentList().get(a);
+
+				int x = agent.getPosition().getPosX();
+				int y = agent.getPosition().getPosY();
+
 				g.setColor(agent.getColor());
-				g.fillOval(l*boxSize,c*boxSize,boxSize,boxSize);
+				g.fillOval(x * BOX_SIZE, y * BOX_SIZE, BOX_SIZE, BOX_SIZE);
 			}
-		}*/
-		
-		if(PropertiesReader.getInstance().gridIsVisible()){
-			g.setColor(Color.DARK_GRAY);
-			for(int x = 1; x < gridSizeX; x++){
-				g.drawLine(x*boxSize, 0, x*boxSize, boxSize*gridSizeX);
-			}
-			
-			for(int y = 1; y < gridSizeY; y++){
-				g.drawLine(0, y*boxSize, boxSize*gridSizeY, y*boxSize);
+			if(GRID_IS_VISIBLE){
+				g.setColor(Color.DARK_GRAY);
+				for(int x = 1; x < gridSizeX; x++){
+					g.drawLine(x*BOX_SIZE, 0, x*BOX_SIZE, BOX_SIZE*gridSizeX);
+				}
+
+				for(int y = 1; y < gridSizeY; y++){
+					g.drawLine(0, y*BOX_SIZE, BOX_SIZE*gridSizeY, y*BOX_SIZE);
+				}
 			}
 		}
 	}

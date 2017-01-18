@@ -29,8 +29,8 @@ public abstract class MarineAnimal implements Agent {
 	}
 	
 	protected List<Position> findFreePositions(){
-		int gridSizeX = PropertiesReader.getInstance().getGridSizeX();
-		int gridSizeY = PropertiesReader.getInstance().getGridSizeY();
+		int gridSizeX = env.getGridSizeX();
+		int gridSizeY = env.getGridSizeY();
 		
 		List<Position> positions = new ArrayList<Position>();
 		for(int x = -1; x <= 1; x++){
@@ -38,7 +38,7 @@ public abstract class MarineAnimal implements Agent {
 				if(!(x == 0 && y == 0)){
 					int newPositionX = posX+x;
 					int newPositionY = posY+y;
-					if(PropertiesReader.getInstance().isToric()){
+					if(env.isToric()){
 						if(newPositionX < 0){
 							newPositionX = gridSizeX -1;
 						} else if(newPositionX >= gridSizeX){

@@ -6,6 +6,7 @@ import java.util.List;
 public class Environment {
 	
 	private Agent[][] agentGrid;
+	private boolean isToric;
 
 	private List<Agent> agentsToRemove;
 	private List<Agent> agentsToAdd;
@@ -13,6 +14,7 @@ public class Environment {
 	public Environment() {
 		super();
 		agentGrid = new Agent[PropertiesReader.getInstance().getGridSizeX()][PropertiesReader.getInstance().getGridSizeY()];
+		isToric = PropertiesReader.getInstance().isToric();
 		setAgentsToRemove(new ArrayList<Agent>());
 		setAgentsToAdd(new ArrayList<Agent>());
 	}
@@ -43,18 +45,15 @@ public class Environment {
 		this.agentsToAdd = agentsToAdd;
 	}
 
-	public int getAgentNumber() {
-		int i = 0;
-		
-		for(int x = 0; x < agentGrid.length; x++){
-			for(int y = 0; y < agentGrid[0].length; y++){
-				if(agentGrid[x][y] != null){
-					i++;
-				}
-			}
-		}
-		
-		return i;
+	public int getGridSizeX(){
+		return agentGrid.length;
 	}
-	
+
+	public int getGridSizeY(){
+		return agentGrid[0].length;
+	}
+
+	public boolean isToric(){
+		return isToric;
+	}
 }

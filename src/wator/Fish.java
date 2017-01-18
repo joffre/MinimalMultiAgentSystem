@@ -7,8 +7,11 @@ import java.util.Random;
 import core.Environment;
 import core.Position;
 import core.PropertiesReader;
+import output.Log;
 
 public class Fish extends MarineAnimal{
+
+	public static final int FISH_BREED_TIME = PropertiesReader.getInstance().getFishBreedTime();
 	
 	public Fish(Environment environment, int posX, int posY) {
 		this(environment, posX, posY, false);
@@ -36,10 +39,11 @@ public class Fish extends MarineAnimal{
 				
 				env.getAgentGrid()[posX][posY] = null;
 				
-				if(currentBreedTime >= PropertiesReader.getInstance().getFishBreedTime()){
+				if(currentBreedTime >= FISH_BREED_TIME){
 					Fish babyFish = new Fish(env, posX, posY, true);
 					env.getAgentGrid()[posX][posY] = babyFish;
 					env.getAgentsToAdd().add(babyFish);
+					Log.info("Agent;"+"Fish;"+"BORN;"+posX+";"+posY+";");
 					currentBreedTime = -1;
 				}
 				

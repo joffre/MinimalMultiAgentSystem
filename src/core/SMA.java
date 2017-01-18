@@ -9,7 +9,10 @@ public class SMA extends Observable{
 
 	private List<Agent> agentList;
 	private Environment env;
-	
+	public static final int TICK_NUMBER = PropertiesReader.getInstance().getTickNumber();
+	public static final char SCHEDULING_TYPE = PropertiesReader.getInstance().getScheduling();
+	public static final int DELAY = PropertiesReader.getInstance().getDelay();
+
 	public SMA(Environment env, List<Agent> agents){
 		this.env = env;
 		agentList = agents;
@@ -25,9 +28,9 @@ public class SMA extends Observable{
 	
 	public void run(){
 		int currentTick = 0;
-		while(PropertiesReader.getInstance().getTickNumber() == 0 || currentTick < PropertiesReader.getInstance().getTickNumber()){
+		while(TICK_NUMBER == 0 || currentTick < TICK_NUMBER){
 			
-			switch (PropertiesReader.getInstance().getScheduling()) {
+			switch (SCHEDULING_TYPE) {
 			case 'E': //'E' - Equitable
 				Collections.shuffle(agentList);
 				for(Agent agent : agentList){
@@ -51,35 +54,29 @@ public class SMA extends Observable{
 				}
 			}
 			currentTick ++;
-			
-			/*if(!agentList.containsAll(env.getAgentsToRemove())){
-				System.out.println("FFFFAAAAIIIILLLL");
-				for(Agent a : env.getAgentsToRemove()){
-					if(!agentList.contains(a)){
-						System.out.println(a +" " + a.getPosition().getPosX()+ "," + a.getPosition().getPosY() + " " + a.getColor());
-						for(Agent c : agentList){
-							if(c.toString().contains("false")){
-								System.out.println("--> " + a +" " + c.getPosition().getPosX()+ "," + c.getPosition().getPosY() + " " + a.getColor());
-							}
-						}
-					}
-				}
-			}*/
-			agentList.removeAll(env.getAgentsToRemove());
-			env.getAgentsToAdd().removeAll(env.getAgentsToRemove());
-			agentList.addAll(env.getAgentsToAdd());
-						
-			env.getAgentsToRemove().clear();
-			env.getAgentsToAdd().clear();
+
+			if(!env.getAgentsToRemove().isEmpty()) {
+				agentList.removeAll(env.getAgentsToRemove());
+				env.getAgentsToAdd().removeAll(env.getAgentsToRemove());
+				env.getAgentsToRemove().clear();
+			}
+			if(!env.getAgentsToAdd().isEmpty()){
+				agentList.addAll(env.getAgentsToAdd());
+				env.getAgentsToAdd().clear();
+			}
 
 			setChanged();
 			notifyObservers();
 			try {
-				Thread.sleep(PropertiesReader.getInstance().getDelay());
+				Thread.sleep(DELAY);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			if(agentList.size() == 0) break;
 		}
+	}
+
+	public Environment getEnv(){
+		return this.env;
 	}
 }

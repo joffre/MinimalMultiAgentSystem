@@ -31,8 +31,8 @@ public class Particule implements Agent{
 		//+1 modulo la taille - deplacement à droite
 		//-1 + la taille modulo la taille
 		boolean frontCollision = false;
-		int gridSizeX = PropertiesReader.getInstance().getGridSizeX();
-		int gridSizeY = PropertiesReader.getInstance().getGridSizeY();
+		int gridSizeX = env.getGridSizeX();
+		int gridSizeY = env.getGridSizeY();
 		
 		int newPositionX = posX+pasX;
 		int newPositionY = posY+pasY;
@@ -40,7 +40,7 @@ public class Particule implements Agent{
 		/**
 		 * New position (toric or not)
 		 */
-		if(PropertiesReader.getInstance().isToric()){
+		if(env.isToric()){
 			if(newPositionX < 0){
 				newPositionX = gridSizeX -1;
 			} else if(newPositionX >= gridSizeX){

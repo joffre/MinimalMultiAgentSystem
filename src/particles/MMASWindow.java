@@ -1,4 +1,4 @@
-package particules;
+package particles;
 
 import java.awt.HeadlessException;
 

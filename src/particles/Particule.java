@@ -1,41 +1,28 @@
-package particules;
+package particles;
 
 import java.awt.Color;
 
 import core.Agent;
 import core.Environment;
 import core.Position;
-import core.PropertiesReader;
 
-public class Particule implements Agent{
-	Color color;
-	int posX, posY;
+public class Particule extends Agent{
 	
 	int pasX, pasY;
 	
-	Environment env;
-	
-	public Particule(Color color, int posX, int posY, int pasX, int pasY){
-		this.color = color;
-		this.posX = posX;
-		this.posY = posY;
+	public Particule(Environment env, Color color, Position position, int pasX, int pasY){
+		super(env, color, position);
 		this.pasX = pasX;
 		this.pasY = pasY;
 	}
 	
-	public void setEnvironment(Environment env){
-		this.env = env;
-	}
-	
 	public void update(){
-		//+1 modulo la taille - deplacement à droite
-		//-1 + la taille modulo la taille
 		boolean frontCollision = false;
 		int gridSizeX = env.getGridSizeX();
 		int gridSizeY = env.getGridSizeY();
 		
-		int newPositionX = posX+pasX;
-		int newPositionY = posY+pasY;
+		int newPositionX = getPosition().getPosX()+pasX;
+		int newPositionY = getPosition().getPosY()+pasY;
 		
 		/**
 		 * New position (toric or not)
@@ -54,12 +41,12 @@ public class Particule implements Agent{
 		} else {
 			if(newPositionX >= gridSizeX || newPositionX <0){
 				pasX *= -1;
-				newPositionX = posX;
+				newPositionX = getPosition().getPosX();
 				frontCollision = true;
 			}
 			if(newPositionY >= gridSizeY || newPositionY <0){
 				pasY *= -1;
-				newPositionY = posY;
+				newPositionY = getPosition().getPosY();
 				frontCollision = true;
 			}
 		}
@@ -67,10 +54,10 @@ public class Particule implements Agent{
 		if(env.getAgentGrid()[newPositionX][newPositionY] != null && !frontCollision){
 			exchangeAgentsDirection(this, (Particule) env.getAgentGrid()[newPositionX][newPositionY]);
 		} else {
-			env.getAgentGrid()[posX][posY] = null;
-			posX = newPositionX;
-			posY = newPositionY;
-			env.getAgentGrid()[posX][posY] = this;
+			env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = null;
+			getPosition().setPosX(newPositionX);
+			getPosition().setPosY(newPositionY);
+			env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
 		}
 	}
 	
@@ -85,24 +72,7 @@ public class Particule implements Agent{
 		agent2.pasY = tmpPasY;
 	}
 
-	public void decide(){
+	public void decide(int currentTick){
 		
-	}
-
-	public Color getColor() {
-		return color;
-	}
-	
-	public int getPosX(){
-		return posX;
-	}
-	
-	public int getPosY(){
-		return posY;
-	}
-
-	@Override
-	public Position getPosition() {
-		return new Position(posX, posY);
 	}
 }

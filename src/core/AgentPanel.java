@@ -38,7 +38,7 @@ public class AgentPanel extends JPanel implements Observer{
 				int y = agent.getPosition().getPosY();
 
 				g.setColor(agent.getColor());
-				g.fillOval(x * BOX_SIZE, y * BOX_SIZE, BOX_SIZE, BOX_SIZE);
+				g.fillOval(x * BOX_SIZE, y * BOX_SIZE, BOX_SIZE-1, BOX_SIZE);
 			}
 			if(GRID_IS_VISIBLE){
 				g.setColor(Color.DARK_GRAY);

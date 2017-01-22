@@ -1,31 +1,32 @@
 package core;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Observable;
-import java.util.Random;
+import java.util.*;
 
-public class SMA extends Observable{
+public abstract class SMA extends Observable{
 
 	private List<Agent> agentList;
 	private Environment env;
 	public static final int TICK_NUMBER = PropertiesReader.getInstance().getTickNumber();
 	public static final char SCHEDULING_TYPE = PropertiesReader.getInstance().getScheduling();
 	public static final int DELAY = PropertiesReader.getInstance().getDelay();
+	protected int currentTick;
 
-	public SMA(Environment env, List<Agent> agents){
-		this.env = env;
-		agentList = agents;
-	}
-	
-	public void setAgentList(List<Agent> agents){
-		this.agentList = agents;
+	public SMA(){
+		this.env = new Environment();
+		agentList = new ArrayList<Agent>();
+		currentTick = -1;
+
+		initAgents();
 	}
 	
 	public List<Agent> getAgentList(){
 		return this.agentList;
 	}
-	
+
+	public abstract void initAgents();
+
+	public abstract void startTickAction();
+
 	public void run(){
 		int currentTick = 0;
 		while(TICK_NUMBER == 0 || currentTick < TICK_NUMBER){
@@ -34,7 +35,7 @@ public class SMA extends Observable{
 			case 'E': //'E' - Equitable
 				Collections.shuffle(agentList);
 				for(Agent agent : agentList){
-					agent.decide();
+					agent.decide(currentTick);
 					agent.update();
 				}
 				break;
@@ -43,13 +44,13 @@ public class SMA extends Observable{
 				Random r = new Random();
 				for(int i = 0; i < r.nextInt(size); i ++){
 					Agent agent = agentList.get(r.nextInt(size));
-					agent.decide();
+					agent.decide(currentTick);
 					agent.update();
 				}
 				break;
 			default: //'S' - Sequential
 				for(Agent agent : agentList){
-					agent.decide();
+					agent.decide(currentTick);
 					agent.update();
 				}
 			}
@@ -76,7 +77,13 @@ public class SMA extends Observable{
 		}
 	}
 
+	public abstract void endTickAction();
+
 	public Environment getEnv(){
 		return this.env;
+	}
+
+	public int getCurrentTick(){
+		return this.currentTick;
 	}
 }

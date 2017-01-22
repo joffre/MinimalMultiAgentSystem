@@ -30,6 +30,12 @@ public class PropertiesReader {
 	
 	private final String FISH_NUMBER = "FISH_NUMBER";
 	private final String FISH_BREED_TIME = "FISH_BREED_TIME";
+
+	private final String WALLS_PERCENT="WALLS_PERCENT";
+	private final String HUNTER_NUMBER="HUNTER_NUMBER";
+	private final String HUNTER_SPEED="HUNTER_SPEED";
+	private final String AVATAR_SPEED="AVATAR_SPEED";
+	private final String DEFENDER_LIFE="DEFENDER_LIFE";
 	
 	private Properties p;
 
@@ -62,6 +68,12 @@ public class PropertiesReader {
 				
 				p.setProperty(FISH_NUMBER, "1000");
 				p.setProperty(FISH_BREED_TIME, "2");
+
+				p.setProperty(WALLS_PERCENT, "40");
+				p.setProperty(HUNTER_NUMBER, "5");
+				p.setProperty(HUNTER_SPEED, "1");
+				p.setProperty(AVATAR_SPEED, "1");
+				p.setProperty(DEFENDER_LIFE, "10");
 				
 				p.store((new FileWriter(configFile)), "");
 			} catch (IOException e) {
@@ -154,5 +166,25 @@ public class PropertiesReader {
 	
 	public int getFishBreedTime(){
 		return Integer.parseInt((String) p.getOrDefault(FISH_BREED_TIME, 2));
+	}
+
+	public int getWallsPercent(){
+		return Integer.parseInt((String) p.getOrDefault(WALLS_PERCENT,40));
+	}
+
+	public int getHunterNumber(){
+		return Integer.parseInt((String) p.getOrDefault(HUNTER_NUMBER, 5));
+	}
+
+	public int getHunterSpeed(){
+		return Integer.parseInt((String) p.getOrDefault(HUNTER_SPEED, 1));
+	}
+
+	public int getAvatarSpeed(){
+		return Integer.parseInt((String) p.getOrDefault(AVATAR_SPEED, 1));
+	}
+
+	public int getDefenderLife(){
+		return Integer.parseInt((String) p.getOrDefault(DEFENDER_LIFE, 6));
 	}
 }

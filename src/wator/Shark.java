@@ -16,14 +16,13 @@ public class Shark extends MarineAnimal{
 	public static final int SHARK_STARVE_TIME = PropertiesReader.getInstance().getSharkStarveTime();
 	public static final int SHARK_BREED_TIME = PropertiesReader.getInstance().getSharkBreedTime();
 	
-	public Shark(Environment environment, int posX, int posY) {
-		this(environment, posX, posY, false);
+	public Shark(Environment environment, Position position) {
+		this(environment, position, false);
 	}
 	
-	public Shark(Environment environment,int posX, int posY, boolean baby) {
-		super(environment, posX, posY, baby);
+	public Shark(Environment environment, Position position, boolean baby) {
+		super(environment, (baby)?Color.PINK:Color.RED, position, baby);
 		this.currentStarveTime = SHARK_STARVE_TIME;
-		color = (baby)?Color.PINK:Color.RED;
 	}
 	
 	@Override
@@ -32,7 +31,7 @@ public class Shark extends MarineAnimal{
 		if(isAlive()){
 			if(baby){
 				baby = false;	
-				color = Color.RED;
+				setColor(Color.RED);
 			}
 			if(currentStarveTime > 0){
 				Position newPosition = null;
@@ -45,7 +44,7 @@ public class Shark extends MarineAnimal{
 					env.getAgentsToRemove().add(fish);
 					env.getAgentGrid()[newPosition.getPosX()][newPosition.getPosY()] = null;
 					currentStarveTime = SHARK_STARVE_TIME;
-					Log.info("Agent;"+"Fish;"+"DEAD;"+fish.posX+";"+fish.posY+";");
+					Log.info("Agent;"+"Fish;"+"DEAD;"+fish.getPosition().getPosX()+";"+fish.getPosition().getPosY()+";");
 				} else {
 					List<Position> positions = findFreePositions();
 					if(!positions.isEmpty()){
@@ -53,25 +52,25 @@ public class Shark extends MarineAnimal{
 					}
 				}
 				if(newPosition != null){
-					env.getAgentGrid()[posX][posY] = null;
+					env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = null;
 					if(currentBreedTime >= SHARK_BREED_TIME){
-						Shark babyShark = new Shark(env, posX, posY, true);
-						env.getAgentGrid()[posX][posY] = babyShark;
+						Shark babyShark = new Shark(env, new Position(getPosition().getPosX(), getPosition().getPosY()), true);
+						env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = babyShark;
 						env.getAgentsToAdd().add(babyShark);
 						currentBreedTime = -1;
-						Log.info("Agent;"+"Shark;"+"BORN;"+posX+";"+posY+";");
+						Log.info("Agent;"+"Shark;"+"BORN;"+getPosition().getPosX()+";"+getPosition().getPosY()+";");
 					}
-					posX = newPosition.getPosX();
-					posY = newPosition.getPosY();
-					env.getAgentGrid()[posX][posY] = this;
+					getPosition().setPosX(newPosition.getPosX());
+					getPosition().setPosY(newPosition.getPosY());
+					env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
 				}
 				currentStarveTime--;
 				currentBreedTime++;
 			} else {
-				env.getAgentGrid()[posX][posY] = null;
+				env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = null;
 				kill();
 				env.getAgentsToRemove().add(this);
-				Log.info("Agent;"+"Shark;"+"DEAD;"+posX+";"+posY+";");
+				Log.info("Agent;"+"Shark;"+"DEAD;"+getPosition().getPosX()+";"+getPosition().getPosY()+";");
 			}
 		}
 	}
@@ -84,8 +83,8 @@ public class Shark extends MarineAnimal{
 		for(int x = -1; x <= 1; x++){
 			for(int y = -1; y <= 1; y++){
 				if(!(x == 0 && y == 0)){
-					int newPositionX = posX+x;
-					int newPositionY = posY+y;
+					int newPositionX = getPosition().getPosX()+x;
+					int newPositionY = getPosition().getPosY()+y;
 					if(env.isToric()){
 						if(newPositionX < 0){
 							newPositionX = gridSizeX -1;
@@ -99,10 +98,10 @@ public class Shark extends MarineAnimal{
 						}
 					} else {
 						if(newPositionX >= gridSizeX || newPositionX <0){
-							newPositionX = posX;
+							newPositionX = getPosition().getPosX();
 						}
 						if(newPositionY >= gridSizeY || newPositionY <0){
-							newPositionY = posY;
+							newPositionY = getPosition().getPosY();
 						}
 					}
 					Agent fToEat = env.getAgentGrid()[newPositionX][newPositionY];
@@ -116,7 +115,7 @@ public class Shark extends MarineAnimal{
 	}
 
 	@Override
-	public void decide() {
+	public void decide(int currentTick) {
 	}
 
 }

@@ -14,10 +14,11 @@ public class AvatarMain {
     public static void main(String[] args){
         AvatarSMA sma = new AvatarSMA();
 
-        AgentPanel avatarPanel = new AgentPanel(Color.MAGENTA);
+        AgentPanel avatarPanel = new AgentPanel(Color.LIGHT_GRAY);
         MMASWindow win = new MMASWindow("MinimalMultiAgentsSystem - Hunters", avatarPanel);
         sma.addObserver(avatarPanel);
         sma.addAvatarKeyListener(win);
+        win.addKeyListener(new HunterGameKeyListener(sma));
         win.setVisible(true);
 
 		/*WatorLineChart lineChart = new WatorLineChart();

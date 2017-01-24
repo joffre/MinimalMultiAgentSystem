@@ -2,6 +2,7 @@ package hunter;
 
 import core.Agent;
 import core.Environment;
+import core.MColor;
 import core.Position;
 
 import java.awt.*;
@@ -11,8 +12,8 @@ import java.awt.*;
  */
 public class Hunter extends Agent {
 
-    public Hunter(Environment env, Color color, Position position) {
-        super(env, color, position);
+    public Hunter(Environment env, Position position) {
+        super(env, MColor.BROWN, position);
     }
 
     @Override

@@ -5,24 +5,35 @@ import core.Environment;
 import core.Position;
 import core.PropertiesReader;
 
-import java.awt.*;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Geoffrey on 20/01/2017.
  */
 public class Avatar extends Agent implements KeyListener{
 
-    int dirX;
-    int dirY;
+    private int dirX;
+    private int dirY;
     int speed;
+    int eatDefender;
+
+    boolean alive;
+    boolean winner;
+    boolean winnerCreated;
 
     public Avatar(Environment env, Color color, Position position) {
         super(env, color, position);
         dirX = 0;
         dirY = 0;
         speed = PropertiesReader.getInstance().getAvatarSpeed();
+        eatDefender = 0;
+        alive = true;
+        winner = false;
+        winnerCreated = false;
     }
 
     @Override
@@ -35,7 +46,7 @@ public class Avatar extends Agent implements KeyListener{
         if(currentTick%speed == 0){
 
             int newPositionX = getPosition().getPosX()+dirX;
-            int newPositionY = getPosition().getPosX()+dirY;
+            int newPositionY = getPosition().getPosY()+dirY;
 
             int gridSizeX = env.getGridSizeX();
             int gridSizeY = env.getGridSizeY();
@@ -65,26 +76,38 @@ public class Avatar extends Agent implements KeyListener{
                 }
             }
             Agent dest = env.getAgentGrid()[newPositionX][newPositionY];
-            if(dest != null && dest instanceof Wall){
-                dirX = 0;
-                dirY = 0;
+            if(dest != null){
+                if(dest instanceof Wall) {
+                    dirX = 0;
+                    dirY = 0;
+                } else if(dest instanceof Defender && ((Defender) dest ).isAlive() && eatDefender >= 0){
+                    env.removeAgent(dest);
+                    eatDefender++;
+                    moveToNewPosition(newPositionX, newPositionY);
+                    if(eatDefender >= 4 && !winnerCreated){
+                        createWinner();
+                        winnerCreated = true;
+                    }
+                } else if(dest instanceof Winner){
+                    winner = true;
+                }
             } else {
-                env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = null;
-                getPosition().setPosX(newPositionX);
-                getPosition().setPosY(newPositionY);
-                env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
+                moveToNewPosition(newPositionX, newPositionY);
             }
         }
     }
 
-    @Override
+    private void createWinner() {
+        List<Position> freePositions = env.getAllFreePositions();
+        int randomIndex = (new Random()).nextInt(freePositions.size());
+        env.addAgent(new Winner(env, freePositions.get(randomIndex)));
+    }
+
     public void keyTyped(KeyEvent e) {
         //
     }
 
-    @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e);
         switch(e.getKeyCode()){
             case KeyEvent.VK_LEFT :
                 dirX = 0;
@@ -105,8 +128,20 @@ public class Avatar extends Agent implements KeyListener{
         }
     }
 
-    @Override
     public void keyReleased(KeyEvent e) {
         //
     }
+
+    public void kill(){
+        if(isAlive() && !isWinner()) alive = false;
+    }
+
+    public boolean isAlive(){
+        return alive;
+    }
+
+    public boolean isWinner(){
+        return winner;
+    }
+
 }

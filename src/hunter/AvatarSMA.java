@@ -17,11 +17,20 @@ import java.util.Random;
  */
 public class AvatarSMA extends SMA {
 
+    Random rand;
+    int DEFENDER_SPAWN_FREQUENCY;
+    private final int DEFENDER_LIFE = PropertiesReader.getInstance().getDefenderLife();
+    Avatar player;
+
+    public AvatarSMA(){
+        super();
+        DEFENDER_SPAWN_FREQUENCY = 50;
+    }
+
     @Override
     public void initAgents() {
-
+        rand = new Random(PropertiesReader.getInstance().getSeed());
         PropertiesReader params = PropertiesReader.getInstance();
-        Random random = new Random(params.getSeed());
 
         List<Position> positions = new ArrayList<Position>();
 
@@ -38,28 +47,21 @@ public class AvatarSMA extends SMA {
         int wallsNumber = getEnv().getGridSizeX()*getEnv().getGridSizeY() * params.getWallsPercent() / 100;
 
         for(int w = 0; w < wallsNumber; w++){
-            Position wallPosition = positions.remove(random.nextInt(positions.size()));
+            Position wallPosition = positions.remove(rand.nextInt(positions.size()));
             getAgentList().add(new Wall(getEnv(), Color.GRAY, wallPosition));
         }
 
         //init Avatar
-        Position avatarPosition = positions.remove((random.nextInt(positions.size())));
-        getAgentList().add(new Avatar(getEnv(), Color.GREEN, avatarPosition));
+        Position avatarPosition = positions.remove((rand.nextInt(positions.size())));
+        player = new Avatar(getEnv(), Color.GREEN, avatarPosition);
+        getAgentList().add(player);
 
         //init Hunters
         int huntersNumber = params.getHunterNumber();
         for(int h = 0; h < huntersNumber; h++){
-            Position hunterPosition = positions.remove(random.nextInt(positions.size()));
-            getAgentList().add(new Hunter(getEnv(), Color.RED, hunterPosition));
+            Position hunterPosition = positions.remove(rand.nextInt(positions.size()));
+            getAgentList().add(new Hunter(getEnv(), hunterPosition));
         }
-
-        //init Defenders
-        int defendersNumber = 0;
-        for(int d = 0; d < defendersNumber; d++){
-            Position defenderposition = positions.remove(random.nextInt(positions.size()));
-            //TODO add Hunter
-        }
-
 
         positions.clear();
 
@@ -82,5 +84,27 @@ public class AvatarSMA extends SMA {
     @Override
     public void endTickAction() {
 
+        if(player.isAlive()){
+            if(!player.isWinner()){
+                /**
+                 * Spawn defender
+                 */
+                if(getCurrentTick() > 0 && getCurrentTick() % DEFENDER_SPAWN_FREQUENCY == 0){
+                    List<Position> freePositions = getEnv().getAllFreePositions();
+
+                    if(!freePositions.isEmpty()) {
+                        Defender defender = new Defender(getEnv(), Color.CYAN, freePositions.get(rand.nextInt(freePositions.size())), DEFENDER_LIFE);
+
+                        getEnv().addAgent(defender);
+                    }
+                }
+            } else {
+                currentTick = -1;
+                JOptionPane.showMessageDialog (null, "You won ! Congratulations ;)", "Owned !", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            currentTick = -1;
+            JOptionPane.showMessageDialog (null, "Game Over, You died...!", "Failed !", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

@@ -28,8 +28,8 @@ public abstract class SMA extends Observable{
 	public abstract void startTickAction();
 
 	public void run(){
-		int currentTick = 0;
-		while(TICK_NUMBER == 0 || currentTick < TICK_NUMBER){
+		currentTick = 0;
+		while((TICK_NUMBER == 0 || currentTick < TICK_NUMBER) && currentTick > -1){
 			
 			switch (SCHEDULING_TYPE) {
 			case 'E': //'E' - Equitable
@@ -56,6 +56,7 @@ public abstract class SMA extends Observable{
 			}
 			currentTick ++;
 
+			endTickAction();
 			if(!env.getAgentsToRemove().isEmpty()) {
 				agentList.removeAll(env.getAgentsToRemove());
 				env.getAgentsToAdd().removeAll(env.getAgentsToRemove());

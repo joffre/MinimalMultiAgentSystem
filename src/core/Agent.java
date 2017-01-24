@@ -70,4 +70,11 @@ public abstract class Agent {
 		}
 		return positions;
 	}
+
+	protected void moveToNewPosition(int newPosX, int newPosY){
+		env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = null;
+		getPosition().setPosX(newPosX);
+		getPosition().setPosY(newPosY);
+		env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
+	}
 }

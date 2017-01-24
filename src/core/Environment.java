@@ -1,5 +1,7 @@
 package core;
 
+import hunter.Defender;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +57,29 @@ public class Environment {
 
 	public boolean isToric(){
 		return isToric;
+	}
+
+	public void removeAgent(Agent aToRemove){
+		getAgentsToRemove().add(aToRemove);
+		getAgentGrid()[aToRemove.getPosition().getPosX()][aToRemove.getPosition().getPosY()] = null;
+	}
+
+	public void addAgent(Agent agent) {
+		getAgentGrid()[agent.getPosition().getPosX()][agent.getPosition().getPosY()] = agent;
+		getAgentsToAdd().add(agent);
+	}
+
+	public List<Position> getAllFreePositions(){
+		Agent[][] agentsGrid = getAgentGrid();
+
+		List<Position> freePositions = new ArrayList<Position>();
+
+		for(int x = 0; x < getGridSizeX(); x++){
+			for(int y = 0; y < getGridSizeY(); y++){
+				if(agentsGrid[x][y] == null) freePositions.add(new Position(x, y));
+			}
+		}
+
+		return freePositions;
 	}
 }

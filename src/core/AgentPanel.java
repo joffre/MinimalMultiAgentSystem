@@ -34,8 +34,8 @@ public class AgentPanel extends JPanel implements Observer{
 			for (int a = 0; a < sma.getAgentList().size(); a++) {
 				Agent agent = sma.getAgentList().get(a);
 
-				int x = agent.getPosition().getPosX();
-				int y = agent.getPosition().getPosY();
+				int y = agent.getPosition().getPosX();
+				int x = agent.getPosition().getPosY();
 
 				g.setColor(agent.getColor());
 				g.fillOval(x * BOX_SIZE, y * BOX_SIZE, BOX_SIZE-1, BOX_SIZE);
@@ -53,7 +53,6 @@ public class AgentPanel extends JPanel implements Observer{
 		}
 	}
 
-	@Override
 	public void update(Observable obs, Object arg1) {
 		sma = (SMA) obs;
 		repaint();

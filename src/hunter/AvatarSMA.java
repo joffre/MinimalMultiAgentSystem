@@ -21,24 +21,30 @@ public class AvatarSMA extends SMA {
     int DEFENDER_SPAWN_FREQUENCY;
     private final int DEFENDER_LIFE = PropertiesReader.getInstance().getDefenderLife();
     Avatar player;
+    Dijkstra dijkstra;
 
     public AvatarSMA(){
         super();
         DEFENDER_SPAWN_FREQUENCY = 50;
+
     }
 
     @Override
     public void initAgents() {
         rand = new Random(PropertiesReader.getInstance().getSeed());
         PropertiesReader params = PropertiesReader.getInstance();
+        System.out.println(params.getGridSizeX() + "," + params.getGridSizeY());
+        dijkstra = new Dijkstra(params.getGridSizeX(), params.getGridSizeY());
 
         List<Position> positions = new ArrayList<Position>();
 
-        for(int x = 0; x < PropertiesReader.getInstance().getGridSizeX(); x++){
-            for(int y = 0; y < PropertiesReader.getInstance().getGridSizeY(); y++){
+        for(int x = 0; x < params.getGridSizeX(); x++){
+            for(int y = 0; y < params.getGridSizeY(); y++){
                 positions.add(new Position(x, y));
             }
         }
+
+        List<Position> positionsToExclude = new ArrayList<>();
 
         //INIT WALLS
         /**
@@ -49,18 +55,21 @@ public class AvatarSMA extends SMA {
         for(int w = 0; w < wallsNumber; w++){
             Position wallPosition = positions.remove(rand.nextInt(positions.size()));
             getAgentList().add(new Wall(getEnv(), Color.GRAY, wallPosition));
+            positionsToExclude.add(new Position(wallPosition.getPosX(), wallPosition.getPosY()));
         }
+
+        dijkstra.setExcludedPositions(positionsToExclude);
 
         //init Avatar
         Position avatarPosition = positions.remove((rand.nextInt(positions.size())));
-        player = new Avatar(getEnv(), Color.GREEN, avatarPosition);
+        player = new Avatar(getEnv(), Color.GREEN, avatarPosition, dijkstra);
         getAgentList().add(player);
 
         //init Hunters
         int huntersNumber = params.getHunterNumber();
         for(int h = 0; h < huntersNumber; h++){
             Position hunterPosition = positions.remove(rand.nextInt(positions.size()));
-            getAgentList().add(new Hunter(getEnv(), hunterPosition));
+            getAgentList().add(new Hunter(getEnv(), hunterPosition, dijkstra));
         }
 
         positions.clear();
@@ -83,7 +92,6 @@ public class AvatarSMA extends SMA {
 
     @Override
     public void endTickAction() {
-
         if(player.isAlive()){
             if(!player.isWinner()){
                 /**

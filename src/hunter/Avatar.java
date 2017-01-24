@@ -20,20 +20,25 @@ public class Avatar extends Agent implements KeyListener{
     private int dirY;
     int speed;
     int eatDefender;
+    int invincible;
 
     boolean alive;
     boolean winner;
     boolean winnerCreated;
 
-    public Avatar(Environment env, Color color, Position position) {
+    private Dijkstra dijkstra;
+
+    public Avatar(Environment env, Color color, Position position, Dijkstra dijkstra) {
         super(env, color, position);
         dirX = 0;
         dirY = 0;
+        this.dijkstra = dijkstra;
         speed = PropertiesReader.getInstance().getAvatarSpeed();
         eatDefender = 0;
         alive = true;
         winner = false;
         winnerCreated = false;
+        invincible = 0;
     }
 
     @Override
@@ -43,6 +48,7 @@ public class Avatar extends Agent implements KeyListener{
 
     @Override
     public void decide(int currentTick) {
+        if(invincible>0)invincible--;
         if(currentTick%speed == 0){
 
             int newPositionX = getPosition().getPosX()+dirX;
@@ -83,7 +89,9 @@ public class Avatar extends Agent implements KeyListener{
                 } else if(dest instanceof Defender && ((Defender) dest ).isAlive() && eatDefender >= 0){
                     env.removeAgent(dest);
                     eatDefender++;
+                    invincible = PropertiesReader.getInstance().getDefenderLife()*2;
                     moveToNewPosition(newPositionX, newPositionY);
+                    dijkstra.compute(getPosition(), invincible > 0);
                     if(eatDefender >= 4 && !winnerCreated){
                         createWinner();
                         winnerCreated = true;
@@ -93,6 +101,7 @@ public class Avatar extends Agent implements KeyListener{
                 }
             } else {
                 moveToNewPosition(newPositionX, newPositionY);
+                dijkstra.compute(getPosition(), invincible >0);
             }
         }
     }

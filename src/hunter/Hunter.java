@@ -1,9 +1,6 @@
 package hunter;
 
-import core.Agent;
-import core.Environment;
-import core.MColor;
-import core.Position;
+import core.*;
 
 import java.awt.*;
 
@@ -12,8 +9,13 @@ import java.awt.*;
  */
 public class Hunter extends Agent {
 
-    public Hunter(Environment env, Position position) {
+    Dijkstra dijkstra;
+    int speed;
+
+    public Hunter(Environment env, Position position, Dijkstra dijkstra) {
         super(env, MColor.BROWN, position);
+        this.dijkstra = dijkstra;
+        speed = PropertiesReader.getInstance().getHunterSpeed();
     }
 
     @Override
@@ -23,6 +25,21 @@ public class Hunter extends Agent {
 
     @Override
     public void decide(int currentTick) {
+        if(currentTick%speed == 0){
+            Position newPos = dijkstra.getNextShortestPosition(getPosition());
+            int newPositionX = newPos.getPosX();
+            int newPositionY = newPos.getPosY();
 
+            Agent dest = env.getAgentGrid()[newPositionX][newPositionY];
+            if(dest != null){
+                if(dest instanceof Avatar && ((Avatar) dest ).isAlive() && !((Avatar) dest ).isWinner()){
+                    ((Avatar) dest).kill();
+                    env.removeAgent(dest);
+                    moveToNewPosition(newPositionX, newPositionY);
+                }
+            } else {
+                moveToNewPosition(newPositionX, newPositionY);
+            }
+        }
     }
 }

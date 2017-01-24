@@ -29,4 +29,18 @@ public class Position {
 		this.posY = posY;
 	}
 
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof Position){
+			Position toE = (Position) obj;
+			return toE.getPosX() == getPosX() && toE.getPosY() == getPosY();
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode(){
+		int tmp = ( posY +  ((posX+1)/2));
+		return posX +  ( tmp * tmp);
+	}
 }

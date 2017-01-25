@@ -18,7 +18,6 @@ public class Avatar extends Agent implements KeyListener{
 
     private int dirX;
     private int dirY;
-    int speed;
     int eatDefender;
     int invincible;
 
@@ -33,7 +32,6 @@ public class Avatar extends Agent implements KeyListener{
         dirX = 0;
         dirY = 0;
         this.dijkstra = dijkstra;
-        speed = PropertiesReader.getInstance().getAvatarSpeed();
         eatDefender = 0;
         alive = true;
         winner = false;
@@ -49,7 +47,7 @@ public class Avatar extends Agent implements KeyListener{
     @Override
     public void decide(int currentTick) {
         if(invincible>0)invincible--;
-        if(currentTick%speed == 0){
+        if(currentTick%HunterGameKL.avatarSpeed == 0){
 
             int newPositionX = getPosition().getPosX()+dirX;
             int newPositionY = getPosition().getPosY()+dirY;

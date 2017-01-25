@@ -10,12 +10,10 @@ import java.awt.*;
 public class Hunter extends Agent {
 
     Dijkstra dijkstra;
-    int speed;
 
     public Hunter(Environment env, Position position, Dijkstra dijkstra) {
         super(env, MColor.BROWN, position);
         this.dijkstra = dijkstra;
-        speed = PropertiesReader.getInstance().getHunterSpeed();
     }
 
     @Override
@@ -25,7 +23,7 @@ public class Hunter extends Agent {
 
     @Override
     public void decide(int currentTick) {
-        if(currentTick%speed == 0){
+        if(currentTick%HunterGameKL.hunterSpeed == 0){
             Position newPos = dijkstra.getNextShortestPosition(getPosition());
             int newPositionX = newPos.getPosX();
             int newPositionY = newPos.getPosY();

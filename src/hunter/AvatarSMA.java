@@ -22,6 +22,7 @@ public class AvatarSMA extends SMA {
     private final int DEFENDER_LIFE = PropertiesReader.getInstance().getDefenderLife();
     Avatar player;
     Dijkstra dijkstra;
+    public boolean paused;
 
     public AvatarSMA(){
         super();
@@ -88,6 +89,11 @@ public class AvatarSMA extends SMA {
     @Override
     public void startTickAction() {
 
+    }
+
+    @Override
+    protected boolean isPaused() {
+        return paused;
     }
 
     @Override

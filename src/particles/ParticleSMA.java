@@ -56,6 +56,11 @@ public class ParticleSMA extends SMA {
     }
 
     @Override
+    protected boolean isPaused() {
+        return false;
+    }
+
+    @Override
     public void endTickAction() {
 
     }

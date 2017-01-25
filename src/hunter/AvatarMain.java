@@ -1,7 +1,6 @@
 package hunter;
 
 import core.AgentPanel;
-import core.SMA;
 import particles.MMASWindow;
 
 import java.awt.*;
@@ -18,7 +17,7 @@ public class AvatarMain {
         MMASWindow win = new MMASWindow("MinimalMultiAgentsSystem - Hunters", avatarPanel);
         sma.addObserver(avatarPanel);
         sma.addAvatarKeyListener(win);
-        win.addKeyListener(new HunterGameKeyListener(sma));
+        win.addKeyListener(new HunterGameKL(sma));
         win.setVisible(true);
 
 		/*WatorLineChart lineChart = new WatorLineChart();

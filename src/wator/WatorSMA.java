@@ -51,6 +51,11 @@ public class WatorSMA extends SMA {
     }
 
     @Override
+    protected boolean isPaused() {
+        return false;
+    }
+
+    @Override
     public void endTickAction() {
         sharkNumber = 0;
         fishNumber = 0;

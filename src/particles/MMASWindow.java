@@ -14,8 +14,8 @@ public class MMASWindow extends JFrame{
 	 */
 	private static final long serialVersionUID = -1469044612333244500L;
 
-	public MMASWindow(String arg0, AgentPanel panel) throws HeadlessException {
-		super(arg0);
+	public MMASWindow(String name, AgentPanel panel) throws HeadlessException {
+		super(name);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().add(new JScrollPane(panel));
 		this.pack();

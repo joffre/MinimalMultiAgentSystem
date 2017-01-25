@@ -28,6 +28,11 @@ public class Defender extends Agent {
     public void decide(int currentTick) {
     }
 
+    @Override
+    public String getCSVString() {
+        return "DEFENDER;"+getPosition().getPosX()+";"+getPosition().getPosY()+";"+(isAlive()?"ALIVE":"DEAD")+";";
+    }
+
     public boolean isAlive(){
         return life > 0;
     }

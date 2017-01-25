@@ -118,4 +118,9 @@ public class Shark extends MarineAnimal{
 	public void decide(int currentTick) {
 	}
 
+	@Override
+	public String getCSVString() {
+		return "Agent;"+"Shark;"+(isAlive()?"ALIVE":"DEAD")+";"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
+	}
+
 }

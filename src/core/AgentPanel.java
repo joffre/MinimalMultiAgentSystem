@@ -42,11 +42,11 @@ public class AgentPanel extends JPanel implements Observer{
 			}
 			if(GRID_IS_VISIBLE){
 				g.setColor(Color.DARK_GRAY);
-				for(int x = 1; x < gridSizeX; x++){
+				for(int x = 1; x <= gridSizeY; x++){
 					g.drawLine(x*BOX_SIZE, 0, x*BOX_SIZE, BOX_SIZE*gridSizeX);
 				}
 
-				for(int y = 1; y < gridSizeY; y++){
+				for(int y = 1; y <= gridSizeX; y++){
 					g.drawLine(0, y*BOX_SIZE, BOX_SIZE*gridSizeY, y*BOX_SIZE);
 				}
 			}

@@ -4,10 +4,10 @@ import core.Agent;
 import core.Position;
 import core.PropertiesReader;
 import core.SMA;
+import output.Log;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,7 +34,6 @@ public class AvatarSMA extends SMA {
     public void initAgents() {
         rand = new Random(PropertiesReader.getInstance().getSeed());
         PropertiesReader params = PropertiesReader.getInstance();
-        System.out.println(params.getGridSizeX() + "," + params.getGridSizeY());
         dijkstra = new Dijkstra(params.getGridSizeX(), params.getGridSizeY());
 
         List<Position> positions = new ArrayList<Position>();
@@ -120,5 +119,11 @@ public class AvatarSMA extends SMA {
             currentTick = -1;
             JOptionPane.showMessageDialog (null, "Game Over, You died...!", "Failed !", JOptionPane.ERROR_MESSAGE);
         }
+        if(Log.isEnabled())
+            for(Agent a : getAgentList()){
+                if(!(a instanceof Wall)){
+                    Log.info(a.getCSVString());
+                }
+            }
     }
 }

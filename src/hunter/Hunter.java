@@ -40,4 +40,9 @@ public class Hunter extends Agent {
             }
         }
     }
+
+    @Override
+    public String getCSVString() {
+        return "AVATAR;"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
+    }
 }

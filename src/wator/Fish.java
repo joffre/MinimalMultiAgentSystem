@@ -42,7 +42,7 @@ public class Fish extends MarineAnimal{
 					Fish babyFish = new Fish(env, new Position(getPosition().getPosX(), getPosition().getPosY()), true);
 					env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = babyFish;
 					env.getAgentsToAdd().add(babyFish);
-					Log.info("Agent;"+"Fish;"+"BORN;"+getPosition().getPosX()+";"+getPosition().getPosY()+";");
+					Log.info(getCSVString());
 					currentBreedTime = -1;
 				}
 				
@@ -57,6 +57,11 @@ public class Fish extends MarineAnimal{
 
 	@Override
 	public void decide(int currentTick) {
+	}
+
+	@Override
+	public String getCSVString() {
+		return "Agent;"+"Fish;"+"BORN;"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
 	}
 
 }

@@ -77,4 +77,6 @@ public abstract class Agent {
 		getPosition().setPosY(newPosY);
 		env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
 	}
+
+    public abstract String getCSVString();
 }

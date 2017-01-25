@@ -75,4 +75,9 @@ public class Particule extends Agent{
 	public void decide(int currentTick){
 		
 	}
+
+	@Override
+	public String getCSVString() {
+		return "PARTICLE;"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
+	}
 }

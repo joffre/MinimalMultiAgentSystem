@@ -24,4 +24,9 @@ public class Wall extends Agent{
     public void decide(int currentTick) {
 
     }
+
+    @Override
+    public String getCSVString() {
+        return "WALL;"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
+    }
 }

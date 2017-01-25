@@ -14,6 +14,8 @@ public class Log {
 
     private static Log instance;
 
+    private static boolean enabled = PropertiesReader.getInstance().traceIsVisible();
+
     private Log(){
     }
 
@@ -23,10 +25,14 @@ public class Log {
     }
 
     public static void info(String message){
-        if(PropertiesReader.getInstance().traceIsVisible()) getInstance().print(message);
+        if(enabled) getInstance().print(message);
     }
 
     public void print(Object element){
         System.out.println(element.toString());
+    }
+
+    public static boolean isEnabled(){
+        return enabled;
     }
 }

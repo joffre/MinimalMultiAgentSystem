@@ -21,4 +21,9 @@ public class Winner extends Agent {
     public void decide(int currentTick) {
 
     }
+
+    @Override
+    public String getCSVString() {
+        return "WINNER;"+getPosition().getPosX()+";"+getPosition().getPosY()+";";
+    }
 }

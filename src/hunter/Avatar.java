@@ -16,6 +16,8 @@ import java.util.Random;
  */
 public class Avatar extends Agent implements KeyListener{
 
+    private static final int AVATAR_INVINCIBILITY_TIME = PropertiesReader.getInstance().getDefenderLife()/2;
+
     private int dirX;
     private int dirY;
     int eatDefender;
@@ -87,7 +89,7 @@ public class Avatar extends Agent implements KeyListener{
                 } else if(dest instanceof Defender && ((Defender) dest ).isAlive() && eatDefender >= 0){
                     env.removeAgent(dest);
                     eatDefender++;
-                    invincible = PropertiesReader.getInstance().getDefenderLife()*2;
+                    invincible = AVATAR_INVINCIBILITY_TIME;
                     moveToNewPosition(newPositionX, newPositionY);
                     dijkstra.compute(getPosition(), invincible > 0);
                     if(eatDefender >= 4 && !winnerCreated){
@@ -102,6 +104,11 @@ public class Avatar extends Agent implements KeyListener{
                 dijkstra.compute(getPosition(), invincible >0);
             }
         }
+    }
+
+    @Override
+    public String getCSVString() {
+        return "AVATAR;"+getPosition().getPosX()+";"+getPosition().getPosY()+";"+(isAlive()?"ALIVE":"DEAD")+";"+(isWinner()?"WINNER":"LOSER")+";";
     }
 
     private void createWinner() {

@@ -8,7 +8,8 @@ import core.Position;
 
 public class Particule extends Agent{
 	
-	int pasX, pasY;
+	int pasX;
+	int pasY;
 	
 	public Particule(Environment env, Color color, Position position, int pasX, int pasY){
 		super(env, color, position);

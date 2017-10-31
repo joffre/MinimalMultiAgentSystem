@@ -52,6 +52,7 @@ public class Fish extends MarineAnimal{
 				env.getAgentGrid()[getPosition().getPosX()][getPosition().getPosY()] = this;
 				currentBreedTime++;
 			}
+			age ++;
 		}
 	}
 

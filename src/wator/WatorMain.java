@@ -12,6 +12,8 @@ import core.Position;
 import core.PropertiesReader;
 import core.SMA;
 import particles.MMASWindow;
+import wator.view.WatorNumberGraph;
+import wator.view.WatorRatioGraph;
 
 public class WatorMain {
 
@@ -24,18 +26,15 @@ public class WatorMain {
 		sma.addObserver(partPanel);
 		win.setVisible(true);
 
-		/*WatorLineChart lineChart = new WatorLineChart();
 
-		sma.addObserver(lineChart);
+		WatorNumberGraph watorNumberGraph = new WatorNumberGraph();
+		watorNumberGraph.display();
 
-		Thread t = new Thread(){
-			@Override
-			public void run() {
-				lineChart.run();
-			}
-		};
+		WatorRatioGraph watorRatioGraph = new WatorRatioGraph();
 
-		t.start();*/
+		sma.addObserver(watorNumberGraph);
+		sma.addObserver(watorRatioGraph);
+
 		sma.run();
 
 

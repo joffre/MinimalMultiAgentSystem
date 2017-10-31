@@ -72,6 +72,7 @@ public class Shark extends MarineAnimal{
 				env.getAgentsToRemove().add(this);
 				Log.info("Agent;"+"Shark;"+"DEAD;"+getPosition().getPosX()+";"+getPosition().getPosY()+";");
 			}
+			age ++;
 		}
 	}
 	
